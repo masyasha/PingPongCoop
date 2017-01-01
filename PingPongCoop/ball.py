@@ -33,13 +33,23 @@ class Circle(sprite.Sprite):
                 left.append(ran)
         rightSide = True if sum(right) > sum(left) / 2 else False
 
+        def ran():
+            y_vel = random.randint(-BALL_SPEED, BALL_SPEED)
+            return y_vel
+
+        def notZero():
+            y_vel = ran()
+            if y_vel == 0:
+                y_vel = ran()
+            if y_vel != 0:
+                return y_vel
+
         if rightSide:
-            self.y_vel = random.randint(-BALL_SPEED, BALL_SPEED)
             self.x_vel = BALL_SPEED
         if not rightSide:
             self.x_vel = -BALL_SPEED
-            self.y_vel = random.randint(-BALL_SPEED, BALL_SPEED)
 
+        self.y_vel = notZero()
         print self.x_vel, self.y_vel
 
     def update(self, screen, player1, player2, ball):
@@ -53,17 +63,41 @@ class Circle(sprite.Sprite):
 
     def collide(self, player1, player2, ball):
 
+        ###########################  XXXXXXXXXXXXXXXX  #############################
         if player1.rect.x + player_platform.PLATFORM_WIDTH <= ball.x:
             if ball.y + CIRCLE_RADIUS <= player1.rect.y + player_platform.PLATFORM_HEIGHT and ball.y >= player1.rect.y:
+                self.x_vel = -self.x_vel
+
+        if ball.x + CIRCLE_RADIUS <= player1.rect.x:
+            if ball.y + CIRCLE_RADIUS <= player1.rect.y + player_platform.PLATFORM_HEIGHT and ball.y >= player1.rect.y:
+                self.x_vel = -self.x_vel
+
+        if player2.rect.x + player_platform.PLATFORM_WIDTH <= ball.x:
+            if ball.y + CIRCLE_RADIUS <= player2.rect.y + player_platform.PLATFORM_HEIGHT and ball.y >= player2.rect.y:
                 self.x_vel = -self.x_vel
 
         if ball.x + CIRCLE_RADIUS <= player2.rect.x:
             if ball.y + CIRCLE_RADIUS <= player2.rect.y + player_platform.PLATFORM_HEIGHT and ball.y >= player2.rect.y:
                 self.x_vel = -self.x_vel
 
-        if player1.rect.y + player_platform.PLATFORM_HEIGHT <= ball.y:
-            pass
+        ###########################  YYYYYYYYYYYYYYY  ###############################
+        # if player1.rect.y + player_platform.PLATFORM_HEIGHT + 50  <= ball.y:
+        #     if ball.x + CIRCLE_RADIUS <= player1.rect.x + player_platform.PLATFORM_WIDTH and ball.x >= player1.rect.x:
+        #         self.y_vel = -self.y_vel
+        #
+        # if player2.rect.y + player_platform.PLATFORM_HEIGHT + 50 <= ball.y:
+        #     if ball.x + CIRCLE_RADIUS <= player2.rect.x + player_platform.PLATFORM_WIDTH and ball.x >= player2.rect.x:
+        #         self.y_vel = -self.y_vel
+        #
+        # if ball.y - CIRCLE_RADIUS <= player1.rect.y:
+        #     if ball.x + CIRCLE_RADIUS <= player1.rect.x + player_platform.PLATFORM_WIDTH and ball.x >= player1.rect.x:
+        #         self.y_vel = -self.y_vel
+        #
+        # if ball.y - CIRCLE_RADIUS <= player2.rect.y:
+        #     if ball.x + CIRCLE_RADIUS <= player2.rect.x + player_platform.PLATFORM_WIDTH and ball.x + CIRCLE_RADIUS >= player2.rect.x:
+        #         self.y_vel = -self.y_vel
 
+        """##################################################################################################"""
         if ball.x <= 0 or ball.x >= WIN_WIDTH - CIRCLE_RADIUS:  # border collisions
             self.x_vel = -self.x_vel
 
